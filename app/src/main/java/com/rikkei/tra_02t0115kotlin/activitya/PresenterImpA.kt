@@ -9,12 +9,29 @@ class PresenterImpA(var viewA: ViewA) : PresenterA {
     private var peoples = mutableListOf<People>()
 
     override fun savePeople(id: String, name: String, gender: String, age: Int, place: String) {
-        peoples.add(People(id, name, gender, age, place))
+        if (
+            id == ""
+            || name == ""
+            || gender == ""
+            || age.toString() == ""
+            || place == ""
+        ) {
+            viewA.errorEditPeople()
+        } else {
+            peoples.add(People(id, name, gender, age, place))
+        }
+
+
     }
 
     override fun saveTaskToSharedPrefs() {
-        SharedPrefs.putArrayObject(Define.KEY_SHAREDPREFS, peoples)
-        viewA.openB()
+        if (peoples.size != 0) {
+            SharedPrefs.putArrayObject(Define.KEY_SHAREDPREFS, peoples)
+            viewA.openB()
+        } else {
+            viewA.errorEditPeople()
+        }
+
     }
 
 }

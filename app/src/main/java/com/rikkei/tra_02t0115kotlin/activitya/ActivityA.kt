@@ -3,12 +3,16 @@ package com.rikkei.tra_02t0115kotlin.activitya
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.rikkei.tra_02t0115kotlin.activityb.ActivityB
 import com.rikkei.tra_02t0115kotlin.util.getValue
 import kotlinx.android.synthetic.main.activity_a.*
 
 
 class ActivityA : AppCompatActivity(), ViewA {
+    override fun errorEditPeople() {
+        Toast.makeText(this,"Nhập Thông tin",Toast.LENGTH_SHORT).show()
+    }
 
     private var peresenterA: PresenterImpA? = null
 

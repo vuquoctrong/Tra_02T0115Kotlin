@@ -3,6 +3,7 @@ package com.rikkei.tra_02t0115kotlin.sharedpreferences
 import android.content.Context
 import android.content.SharedPreferences
 import com.rikkei.tra_02t0115kotlin.App
+import kotlin.reflect.KClass
 
 class SharedPrefs private constructor() {
     private val mSharedPreferences: SharedPreferences
@@ -72,13 +73,13 @@ class SharedPrefs private constructor() {
             }
 
         fun <T> putArrayObject(key: String, data: List<T>) {
-            val editor = mInstance?.mSharedPreferences?.edit()
+            val editor = instance.mSharedPreferences.edit()
             editor?.putString(key, App.self()?.gSon?.toJson(data))
             editor?.apply()
         }
 
-        fun <T> getArrayObject(key: String, anonymousClass: Class<List<T>>): List<T>? {
-            return App.self()?.gSon?.fromJson(mInstance?.mSharedPreferences?.getString(key, ""), anonymousClass)
+        fun <T> getArrayObject(key: String, anonymousClass: KClass<List<T>>): List<T>? {
+            return App.self()?.gSon?.fromJson(mInstance?.mSharedPreferences?.getString(key, ""), anonymousClass.java)
         }
     }
 }

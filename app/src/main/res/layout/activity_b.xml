@@ -43,6 +43,13 @@
             android:text="All"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+    <Button
+            android:id="@+id/btnSortName"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:text="Sort Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:padding="@dimen/dp_16"

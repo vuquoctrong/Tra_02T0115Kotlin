@@ -38,27 +38,32 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
     private fun init() {
         presenterImpB = PresenterImpB()
         peoples = presenterImpB?.getTasksFromSharedPrefs(this)!!
-        sortAgeList()
         showAgePeople()
         peopleAdapter = PeopleAdapter()
         peopleAdapter?.setPeopleOnclickListener(this)
-        peopleAdapter?.setPeopleList(peoples)
+        peopleAdapter?.setPeopleList(sortAgeList())
         var layoutmanager = LinearLayoutManager(applicationContext)
         layoutmanager?.orientation = LinearLayoutManager.VERTICAL
         recyclerview?.layoutManager = layoutmanager
         recyclerview?.adapter = peopleAdapter
 
-        btnSort015.setOnClickListener{v -> peopleAdapter?.setPeopleList(people015) }
-        btnSort1639.setOnClickListener{v -> peopleAdapter?.setPeopleList(people1639) }
-        btnSort4059.setOnClickListener{v -> peopleAdapter?.setPeopleList(people4059) }
-        btnSort6010.setOnClickListener{v -> peopleAdapter?.setPeopleList(people60100) }
-        btnSortAllAge.setOnClickListener{v -> peopleAdapter?.setPeopleList(peoples) }
+        btnSort015.setOnClickListener { v -> peopleAdapter?.setPeopleList(people015) }
+        btnSort1639.setOnClickListener { v -> peopleAdapter?.setPeopleList(people1639) }
+        btnSort4059.setOnClickListener { v -> peopleAdapter?.setPeopleList(people4059) }
+        btnSort6010.setOnClickListener { v -> peopleAdapter?.setPeopleList(people60100) }
+        btnSortAllAge.setOnClickListener { v -> peopleAdapter?.setPeopleList(peoples) }
+        btnSortName.setOnClickListener { v -> sortAlphabelList() }
 
     }
 
     private fun sortAgeList(): MutableList<People> {
         peoples.sortWith(Comparator { o1, o2 -> o1.age - o2.age })
         return peoples
+    }
+
+    private fun sortAlphabelList() {
+        var sortedList = peoples.sortedWith(compareBy { it.name })
+        peopleAdapter?.setPeopleList(sortedList as MutableList<People>)
     }
 
     override fun onClickItem(people: Int) {
@@ -143,14 +148,15 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
     private fun toString(text: EditText): String {
         return text.text.toString().trim()
     }
-    private fun showAgePeople(){
-        for(i in peoples){
-            when(i.age){
+
+    private fun showAgePeople() {
+        for (i in peoples) {
+            when (i.age) {
                 in 0..15 -> people015.add(i)
                 in 16..39 -> people1639.add(i)
                 in 40..59 -> people4059.add(i)
-                in 60..100 -> people60100.add(i)
-                else -> Log.d("t","lỗi")
+                else -> people60100.add(i)
+
             }
         }
     }
