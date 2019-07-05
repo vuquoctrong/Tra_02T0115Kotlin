@@ -10,18 +10,28 @@ import android.widget.TextView
 import com.rikkei.tra_02t0115kotlin.R
 import com.rikkei.tra_02t0115kotlin.model.People
 
-class PeopleAdapter(var peoples: MutableList<People>?,var peopleOnclickListener: PeopleOnclickListener) : RecyclerView.Adapter<PeopleAdapter.PeopleHolder>() {
+class PeopleAdapter : RecyclerView.Adapter<PeopleAdapter.PeopleHolder>() {
 
+    private var peoples: MutableList<People>? = null
+    private var peopleOnclickListener: PeopleOnclickListener? = null
 
+    fun setPeopleList(list: MutableList<People>) {
+        this.peoples = list
+        notifyDataSetChanged()
+
+    }
+    fun setPeopleOnclickListener(onClick: PeopleOnclickListener){
+        this.peopleOnclickListener = onClick
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeopleHolder = PeopleHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_people, parent, false)
     )
 
-    override fun getItemCount(): Int{
-        return if(peoples != null){
+    override fun getItemCount(): Int {
+        return if (peoples != null) {
             peoples?.size!!
-        }else {
+        } else {
             0
         }
     }
@@ -33,7 +43,7 @@ class PeopleAdapter(var peoples: MutableList<People>?,var peopleOnclickListener:
         holder.name.text = people?.name
         holder.gender.text = people?.gender
         holder.place.text = people?.place
-        holder.cvPeople.setOnClickListener { peopleOnclickListener.onClickItem(position) }
+        holder.cvPeople.setOnClickListener { peopleOnclickListener?.onClickItem(position) }
 
     }
 
@@ -49,6 +59,7 @@ class PeopleAdapter(var peoples: MutableList<People>?,var peopleOnclickListener:
 
 
     }
+
     interface PeopleOnclickListener {
         fun onClickItem(people: Int)
     }

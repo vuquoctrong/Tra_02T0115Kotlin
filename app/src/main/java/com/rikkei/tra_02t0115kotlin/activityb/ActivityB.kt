@@ -1,40 +1,33 @@
 package com.rikkei.tra_02t0115kotlin.activityb
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
 
 import android.support.v7.app.AppCompatActivity
 
 import android.support.v7.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 import com.rikkei.tra_02t0115kotlin.adapter.PeopleAdapter
-import com.rikkei.tra_02t0115kotlin.constant.Define
+
 import com.rikkei.tra_02t0115kotlin.model.People
 
 import kotlinx.android.synthetic.main.activity_b.*
 import kotlin.Comparator
-import kotlin.collections.ArrayList
+
 import android.support.v7.app.AlertDialog
-import android.R
-import android.widget.CheckBox
+import android.util.Log
 import android.widget.EditText
-import android.view.LayoutInflater
-import android.widget.Toast
-import android.content.DialogInterface
-import android.text.TextUtils
-import android.view.View
 
 
 class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListener {
 
-
     private var peopleAdapter: PeopleAdapter? = null
     private var peoples = mutableListOf<People>()
     private var presenterImpB: PresenterImpB? = null
+
+    private var people015 = mutableListOf<People>()
+    private var people1639 = mutableListOf<People>()
+    private var people4059 = mutableListOf<People>()
+    private var people60100 = mutableListOf<People>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,27 +36,24 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
     }
 
     private fun init() {
-
-        presenterImpB = PresenterImpB(this)
+        presenterImpB = PresenterImpB()
         peoples = presenterImpB?.getTasksFromSharedPrefs(this)!!
         sortAgeList()
-        peopleAdapter = PeopleAdapter(peoples, this)
+        showAgePeople()
+        peopleAdapter = PeopleAdapter()
+        peopleAdapter?.setPeopleOnclickListener(this)
+        peopleAdapter?.setPeopleList(peoples)
         var layoutmanager = LinearLayoutManager(applicationContext)
         layoutmanager?.orientation = LinearLayoutManager.VERTICAL
         recyclerview?.layoutManager = layoutmanager
         recyclerview?.adapter = peopleAdapter
 
-    }
+        btnSort015.setOnClickListener{v -> peopleAdapter?.setPeopleList(people015) }
+        btnSort1639.setOnClickListener{v -> peopleAdapter?.setPeopleList(people1639) }
+        btnSort4059.setOnClickListener{v -> peopleAdapter?.setPeopleList(people4059) }
+        btnSort6010.setOnClickListener{v -> peopleAdapter?.setPeopleList(people60100) }
+        btnSortAllAge.setOnClickListener{v -> peopleAdapter?.setPeopleList(peoples) }
 
-    override fun getTasksFromSharedPrefs(context: Context): MutableList<People> {
-        val appSharedPrefs: SharedPreferences? = PreferenceManager
-            .getDefaultSharedPreferences(context.applicationContext)
-        val gson = Gson()
-        val json = appSharedPrefs?.getString(Define::KEY_SHAREDPREFS.toString(), "")
-        peoples = gson.fromJson(json, object : TypeToken<ArrayList<People>>() {
-
-        }.type)
-        return peoples
     }
 
     private fun sortAgeList(): MutableList<People> {
@@ -73,7 +63,6 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
 
     override fun onClickItem(people: Int) {
         val colors = arrayOf<CharSequence>("Edit", "Delete")
-
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Choose option")
         builder.setItems(colors) { dialog, which ->
@@ -94,7 +83,7 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
         builder.setCancelable(false)
         builder.setPositiveButton("Ok") { _, _ ->
             peoples.removeAt(id)
-            peopleAdapter?.notifyDataSetChanged()
+            peopleAdapter?.setPeopleList(peoples)
         }
         builder.setNegativeButton(
             "Canner"
@@ -122,7 +111,15 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
             ) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setPositiveButton("Ok") { dialog, which ->
+            .setPositiveButton("Ok") { _, _ ->
+                upDatePeople(
+                    id,
+                    toString(etIdEdit),
+                    toString(etNameEdit),
+                    toString(etGenderEdit),
+                    toString(etAgeEdit).toInt(),
+                    toString(etPlaceEdit)
+                )
 
             }
         val dialog = alert.create()
@@ -132,20 +129,6 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
         etGenderEdit.setText(peoples[id].gender)
         etAgeEdit.setText(peoples[id].age.toString())
         etPlaceEdit.setText(peoples[id].place)
-
-        val alertDialog = alert.create()
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            upDatePeople(
-                id,
-                toString(etIdEdit),
-                toString(etNameEdit),
-                toString(etGenderEdit),
-                toString(etAgeEdit).toInt(),
-                toString(etPlaceEdit)
-            )
-        }
-
     }
 
     private fun upDatePeople(idEdit: Int, id: String, name: String, gender: String, age: Int, place: String) {
@@ -154,13 +137,23 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
         peoples[idEdit].gender = gender
         peoples[idEdit].age = age
         peoples[idEdit].place = place
-        peopleAdapter?.notifyDataSetChanged()
+        peopleAdapter?.setPeopleList(peoples)
     }
 
     private fun toString(text: EditText): String {
         return text.text.toString().trim()
     }
-
+    private fun showAgePeople(){
+        for(i in peoples){
+            when(i.age){
+                in 0..15 -> people015.add(i)
+                in 16..39 -> people1639.add(i)
+                in 40..59 -> people4059.add(i)
+                in 60..100 -> people60100.add(i)
+                else -> Log.d("t","lỗi")
+            }
+        }
+    }
 
 }
 

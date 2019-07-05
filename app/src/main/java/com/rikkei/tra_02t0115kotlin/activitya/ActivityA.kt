@@ -16,9 +16,7 @@ import com.rikkei.tra_02t0115kotlin.model.People
 import kotlinx.android.synthetic.main.activity_a.*
 
 
-
-class ActivityA : AppCompatActivity(),ViewA {
-
+class ActivityA : AppCompatActivity(), ViewA {
 
     private var people: People? = null
     private var id: String? = null
@@ -27,7 +25,6 @@ class ActivityA : AppCompatActivity(),ViewA {
     private var age: Int? = null
     private var place: String? = null
     private var peoples = mutableListOf<People>()
-
     private var peresenterA: PresenterImpA? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,41 +32,31 @@ class ActivityA : AppCompatActivity(),ViewA {
         setContentView(com.rikkei.tra_02t0115kotlin.R.layout.activity_a)
         init()
     }
-    fun init(){
+
+    private fun init() {
         peresenterA = PresenterImpA(this)
-        btnSignUp.setOnClickListener { v ->  peresenterA?.savePeople()}
-        btnBack.setOnClickListener { v ->  peresenterA?.openB()}
+        btnSignUp.setOnClickListener { v -> savePeople() }
+        btnBack.setOnClickListener { v -> peresenterA?.saveTaskToSharedPrefs(this, peoples) }
     }
-    override fun savePeople() {
+
+    private fun savePeople() {
         id = toString(etId)
         name = toString(etName)
         gender = toString(etGender)
         age = toString(etAge).toInt()
         place = toString(etPlace)
-        people = People(id!!, name!!, gender!!, age!!, place!! )
+        people = People(id!!, name!!, gender!!, age!!, place!!)
         peoples.add(people!!)
 
     }
+
     override fun openB() {
-        peresenterA?.saveTaskToSharedPrefs(this)
         val intent = Intent(this, ActivityB::class.java)
         startActivity(intent)
     }
 
-    override fun saveTaskToSharedPrefs(context: Context) {
-        val appSharedPrefs: SharedPreferences? = PreferenceManager
-            .getDefaultSharedPreferences(context.applicationContext)
-        val prefsEditor: SharedPreferences.Editor? = appSharedPrefs?.edit()
-        val gson = Gson()
-        val json: String? = gson.toJson(peoples)
-        prefsEditor?.putString(Define::KEY_SHAREDPREFS.toString(),json)
-        prefsEditor?.apply()
+
+    private fun toString(text: EditText): String {
+        return text.text.toString().trim()
     }
-
-
-
-    private fun toString(text: EditText) : String{
-            return text.text.toString().trim()
-    }
-
 }
