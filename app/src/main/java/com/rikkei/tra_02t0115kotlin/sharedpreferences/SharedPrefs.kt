@@ -53,6 +53,8 @@ class SharedPrefs private constructor() {
         editor.apply()
     }
 
+
+
     fun clear() {
         mSharedPreferences.edit().clear().apply()
     }
@@ -68,5 +70,15 @@ class SharedPrefs private constructor() {
                 }
                 return mInstance as SharedPrefs
             }
+
+        fun <T> putArrayObject(key: String, data: List<T>) {
+            val editor = mInstance?.mSharedPreferences?.edit()
+            editor?.putString(key, App.self()?.gSon?.toJson(data))
+            editor?.apply()
+        }
+
+        fun <T> getArrayObject(key: String, anonymousClass: Class<List<T>>): List<T>? {
+            return App.self()?.gSon?.fromJson(mInstance?.mSharedPreferences?.getString(key, ""), anonymousClass)
+        }
     }
 }

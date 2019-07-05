@@ -13,7 +13,7 @@ class PresenterImpB : PresenterB {
         val appSharedPrefs: SharedPreferences? = PreferenceManager
             .getDefaultSharedPreferences(context.applicationContext)
         val gson = Gson()
-        val json = appSharedPrefs?.getString(Define::KEY_SHAREDPREFS.toString(), "")
+        val json = appSharedPrefs?.getString(Define.KEY_SHAREDPREFS, "")
         return gson.fromJson(json, object : TypeToken<ArrayList<People>>() {
         }.type)
     }

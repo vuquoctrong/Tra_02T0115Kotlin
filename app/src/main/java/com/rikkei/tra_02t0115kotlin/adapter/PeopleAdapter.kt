@@ -1,6 +1,5 @@
 package com.rikkei.tra_02t0115kotlin.adapter
 
-import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,13 @@ class PeopleAdapter : RecyclerView.Adapter<PeopleAdapter.PeopleHolder>() {
     private var peoples: MutableList<People>? = null
     private var peopleOnclickListener: PeopleOnclickListener? = null
 
-    fun setPeopleList(list: MutableList<People>) {
+    fun setPeopleList(list: MutableList<People>?) {
         this.peoples = list
         notifyDataSetChanged()
 
     }
-    fun setPeopleOnclickListener(onClick: PeopleOnclickListener){
+
+    fun setPeopleOnclickListener(onClick: PeopleOnclickListener) {
         this.peopleOnclickListener = onClick
     }
 
@@ -43,21 +43,16 @@ class PeopleAdapter : RecyclerView.Adapter<PeopleAdapter.PeopleHolder>() {
         holder.name.text = people?.name
         holder.gender.text = people?.gender
         holder.place.text = people?.place
-        holder.cvPeople.setOnClickListener { peopleOnclickListener?.onClickItem(position) }
-
+        holder.cvPeople.setOnClickListener { peopleOnclickListener?.onClickItem(holder.adapterPosition) }
     }
 
-
     class PeopleHolder(v: View) : RecyclerView.ViewHolder(v) {
-
         val id: TextView = v.findViewById(R.id.tvId)
         val name: TextView = v.findViewById(R.id.tvName)
         val gender: TextView = v.findViewById(R.id.tvGender)
         val age: TextView = v.findViewById(R.id.tvAge)
         val place: TextView = v.findViewById(R.id.tvPlace)
         val cvPeople: LinearLayout = v.findViewById(R.id.llPeople)
-
-
     }
 
     interface PeopleOnclickListener {

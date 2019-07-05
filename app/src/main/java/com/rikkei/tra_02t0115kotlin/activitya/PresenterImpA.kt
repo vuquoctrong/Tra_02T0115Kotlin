@@ -1,22 +1,19 @@
 package com.rikkei.tra_02t0115kotlin.activitya
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
-import com.google.gson.Gson
 import com.rikkei.tra_02t0115kotlin.constant.Define
 import com.rikkei.tra_02t0115kotlin.model.People
+import com.rikkei.tra_02t0115kotlin.sharedpreferences.SharedPrefs
 
 class PresenterImpA(var viewA: ViewA) : PresenterA {
 
-    override fun saveTaskToSharedPrefs(context: Context, peoples: MutableList<People>) {
-        val appSharedPrefs: SharedPreferences? = PreferenceManager
-            .getDefaultSharedPreferences(context.applicationContext)
-        val prefsEditor: SharedPreferences.Editor? = appSharedPrefs?.edit()
-        val gson = Gson()
-        val json: String? = gson.toJson(peoples)
-        prefsEditor?.putString(Define::KEY_SHAREDPREFS.toString(), json)
-        prefsEditor?.apply()
+    private var peoples = mutableListOf<People>()
+
+    override fun savePeople(id: String, name: String, gender: String, age: Int, place: String) {
+        peoples.add(People(id, name, gender, age, place))
+    }
+
+    override fun saveTaskToSharedPrefs() {
+        SharedPrefs.putArrayObject(Define.KEY_SHAREDPREFS, peoples)
         viewA.openB()
     }
 
