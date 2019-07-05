@@ -13,7 +13,6 @@ import com.google.gson.reflect.TypeToken
 import com.rikkei.tra_02t0115kotlin.activityb.ActivityB
 import com.rikkei.tra_02t0115kotlin.constant.Define
 import com.rikkei.tra_02t0115kotlin.model.People
-import com.rikkei.tra_02t0115kotlin.sharedpreferences.SharedPrefs
 import kotlinx.android.synthetic.main.activity_a.*
 
 
@@ -50,30 +49,27 @@ class ActivityA : AppCompatActivity(),ViewA {
         people = People(id!!, name!!, gender!!, age!!, place!! )
         peoples.add(people!!)
 
-
     }
     override fun openB() {
-        //SharedPrefs.instance.put("trong",peoples)
-        saveTaskToSharedPrefs(this)
+        peresenterA?.saveTaskToSharedPrefs(this)
         val intent = Intent(this, ActivityB::class.java)
         startActivity(intent)
     }
-    fun toString(text: EditText) : String{
-            return text.text.toString().trim()
-    }
 
-    fun saveTaskToSharedPrefs(context: Context) {
+    override fun saveTaskToSharedPrefs(context: Context) {
         val appSharedPrefs: SharedPreferences? = PreferenceManager
             .getDefaultSharedPreferences(context.applicationContext)
         val prefsEditor: SharedPreferences.Editor? = appSharedPrefs?.edit()
         val gson = Gson()
         val json: String? = gson.toJson(peoples)
-//        val type = object : TypeToken<List<People>>() {
-//
-//        }.type
         prefsEditor?.putString(Define::KEY_SHAREDPREFS.toString(),json)
         prefsEditor?.apply()
     }
 
+
+
+    private fun toString(text: EditText) : String{
+            return text.text.toString().trim()
+    }
 
 }
