@@ -10,9 +10,7 @@ import kotlinx.android.synthetic.main.activity_a.*
 
 
 class ActivityA : AppCompatActivity(), ViewA {
-    override fun errorEditPeople() {
-        Toast.makeText(this,"Nhập Thông tin",Toast.LENGTH_SHORT).show()
-    }
+
 
     private var peresenterA: PresenterImpA? = null
 
@@ -33,11 +31,17 @@ class ActivityA : AppCompatActivity(), ViewA {
                 etPlace.getValue()
             )
         }
-        btnBack.setOnClickListener { v -> peresenterA?.saveTaskToSharedPrefs() }
+        btnBack.setOnClickListener { v ->
+            peresenterA?.saveTaskToSharedPrefs() }
     }
 
     override fun openB() {
         val intent = Intent(this, ActivityB::class.java)
         startActivity(intent)
     }
+
+    override fun errorEditPeople() {
+        Toast.makeText(this, "Nhập Thông tin", Toast.LENGTH_SHORT).show()
+    }
+
 }

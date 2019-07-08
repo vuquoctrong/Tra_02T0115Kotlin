@@ -1,21 +1,15 @@
 package com.rikkei.tra_02t0115kotlin.activityb
 
 import android.os.Bundle
-
-import android.support.v7.app.AppCompatActivity
-
-import android.support.v7.widget.LinearLayoutManager
-
-import com.rikkei.tra_02t0115kotlin.adapter.PeopleAdapter
-
-import com.rikkei.tra_02t0115kotlin.model.People
-
-import kotlinx.android.synthetic.main.activity_b.*
-import kotlin.Comparator
-
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.EditText
+import com.rikkei.tra_02t0115kotlin.adapter.PeopleAdapter
+import com.rikkei.tra_02t0115kotlin.model.People
+import com.rikkei.tra_02t0115kotlin.util.getValue
+import kotlinx.android.synthetic.main.activity_b.*
 
 
 class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListener {
@@ -37,21 +31,25 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
 
     private fun init() {
         presenterImpB = PresenterImpB()
-        peoples = presenterImpB?.getTasksFromSharedPrefs(this)!!
-        showAgePeople()
+        peoples = presenterImpB?.getTasksFromSharedPrefs()!!
+
+
         peopleAdapter = PeopleAdapter()
         peopleAdapter?.setPeopleOnclickListener(this)
         peopleAdapter?.setPeopleList(sortAgeList())
+
         var layoutmanager = LinearLayoutManager(applicationContext)
         layoutmanager?.orientation = LinearLayoutManager.VERTICAL
         recyclerview?.layoutManager = layoutmanager
         recyclerview?.adapter = peopleAdapter
+        showAgePeople()
 
         btnSort015.setOnClickListener { v -> peopleAdapter?.setPeopleList(people015) }
         btnSort1639.setOnClickListener { v -> peopleAdapter?.setPeopleList(people1639) }
         btnSort4059.setOnClickListener { v -> peopleAdapter?.setPeopleList(people4059) }
         btnSort6010.setOnClickListener { v -> peopleAdapter?.setPeopleList(people60100) }
         btnSortAllAge.setOnClickListener { v -> peopleAdapter?.setPeopleList(peoples) }
+
         btnSortName.setOnClickListener { v -> sortAlphabelList() }
 
     }
@@ -117,14 +115,15 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
                 dialog.dismiss()
             }
             .setPositiveButton("Ok") { _, _ ->
-                upDatePeople(
-                    id,
-                    toString(etIdEdit),
-                    toString(etNameEdit),
-                    toString(etGenderEdit),
-                    toString(etAgeEdit).toInt(),
-                    toString(etPlaceEdit)
+
+                presenterImpB?.upDatePeople(
+                    id, etAgeEdit.getValue(),
+                    etNameEdit.getValue(),
+                    etGenderEdit.getValue(),
+                    etAgeEdit.getValue().toInt(),
+                    etPlaceEdit.getValue()
                 )
+                peopleAdapter?.setPeopleList(peoples)
 
             }
         val dialog = alert.create()
@@ -136,18 +135,6 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
         etPlaceEdit.setText(peoples[id].place)
     }
 
-    private fun upDatePeople(idEdit: Int, id: String, name: String, gender: String, age: Int, place: String) {
-        peoples[idEdit].id = id
-        peoples[idEdit].name = name
-        peoples[idEdit].gender = gender
-        peoples[idEdit].age = age
-        peoples[idEdit].place = place
-        peopleAdapter?.setPeopleList(peoples)
-    }
-
-    private fun toString(text: EditText): String {
-        return text.text.toString().trim()
-    }
 
     private fun showAgePeople() {
         for (i in peoples) {
