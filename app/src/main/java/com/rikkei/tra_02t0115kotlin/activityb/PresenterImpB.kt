@@ -7,6 +7,7 @@ import com.rikkei.tra_02t0115kotlin.sharedpreferences.SharedPrefs
 
 class PresenterImpB : PresenterB {
 
+
     private var peoples = mutableListOf<People>()
 
     override fun upDatePeople(idEdit: Int, id: String, name: String, gender: String, age: Int, place: String) {
@@ -18,18 +19,13 @@ class PresenterImpB : PresenterB {
     }
 
 
-
     override fun getTasksFromSharedPrefs(): MutableList<People>? {
-//        return SharedPrefs.instance.getArrayObject(Define.KEY_SHAREDPREFS, object : TypeToken<ArrayList<People>>() {
-//
-//        }.type as Class<MutableList<People>>)
+        peoples = SharedPrefs.instance.getArrayObject(Define.KEY_SHAREDPREFS, object : TypeToken<List<People>>() {})
+            ?.toMutableList()!!
+        return  peoples
+    }
 
-//        return SharedPrefs.instance.getArrayObject(Define.KEY_SHAREDPREFS, object : TypeToken<MutableList<People>>() {
-//
-//        }.type as Class<MutableList<People>>)
-//        return SharedPrefs.instance.getArrayObject(Define.KEY_SHAREDPREFS,
-//            object : TypeToken<List<People>>() {}.type as Class<MutableList<People>>
-//        )
-        return SharedPrefs.instance.getArrayObject(Define.KEY_SHAREDPREFS, object : TypeToken<List<People>>(){})?.toMutableList()
+    override fun savePeople(list: MutableList<People>) {
+        SharedPrefs.instance.putArrayObject(Define.KEY_SHAREDPREFS, list)
     }
 }

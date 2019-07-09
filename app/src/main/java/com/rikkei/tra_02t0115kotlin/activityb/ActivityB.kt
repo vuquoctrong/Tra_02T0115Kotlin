@@ -6,8 +6,12 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.EditText
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.rikkei.tra_02t0115kotlin.adapter.PeopleAdapter
+import com.rikkei.tra_02t0115kotlin.constant.Define
 import com.rikkei.tra_02t0115kotlin.model.People
+import com.rikkei.tra_02t0115kotlin.sharedpreferences.SharedPrefs
 import com.rikkei.tra_02t0115kotlin.util.getValue
 import kotlinx.android.synthetic.main.activity_b.*
 
@@ -15,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_b.*
 class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListener {
 
     private var peopleAdapter: PeopleAdapter? = null
-    private var peoples = mutableListOf<People>()
+    private lateinit var peoples: MutableList<People>
     private var presenterImpB: PresenterImpB? = null
 
     private var people015 = mutableListOf<People>()
@@ -87,6 +91,7 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
         builder.setPositiveButton("Ok") { _, _ ->
             peoples.removeAt(id)
             peopleAdapter?.setPeopleList(peoples)
+            presenterImpB?.savePeople(peoples)
         }
         builder.setNegativeButton(
             "Canner"
@@ -117,13 +122,14 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
             .setPositiveButton("Ok") { _, _ ->
 
                 presenterImpB?.upDatePeople(
-                    id, etAgeEdit.getValue(),
+                    id, etIdEdit.getValue(),
                     etNameEdit.getValue(),
                     etGenderEdit.getValue(),
                     etAgeEdit.getValue().toInt(),
                     etPlaceEdit.getValue()
                 )
                 peopleAdapter?.setPeopleList(peoples)
+                presenterImpB?.savePeople(peoples)
 
             }
         val dialog = alert.create()
@@ -147,6 +153,7 @@ class ActivityB : AppCompatActivity(), ViewB, PeopleAdapter.PeopleOnclickListene
             }
         }
     }
+
 
 }
 

@@ -2,11 +2,8 @@ package com.rikkei.tra_02t0115kotlin.sharedpreferences
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.rikkei.tra_02t0115kotlin.App
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import com.google.gson.reflect.TypeToken
-import kotlin.reflect.KClass
-
+import com.rikkei.tra_02t0115kotlin.App
 
 class SharedPrefs private constructor() {
     private val mSharedPreferences: SharedPreferences
