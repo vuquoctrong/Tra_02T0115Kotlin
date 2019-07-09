@@ -3,6 +3,10 @@ package com.rikkei.tra_02t0115kotlin.sharedpreferences
 import android.content.Context
 import android.content.SharedPreferences
 import com.rikkei.tra_02t0115kotlin.App
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import com.google.gson.reflect.TypeToken
+import kotlin.reflect.KClass
+
 
 class SharedPrefs private constructor() {
     private val mSharedPreferences: SharedPreferences
@@ -59,10 +63,9 @@ class SharedPrefs private constructor() {
         editor?.apply()
     }
 
-    fun <T> getArrayObject(key: String, anonymousClass: Class<MutableList<T>>): MutableList<T>? {
-        return App.self()?.gSon?.fromJson(mInstance?.mSharedPreferences?.getString(key, ""), anonymousClass)
+    fun <T : Any> getArrayObject(key: String, typeToken: TypeToken<T>): T? {
+        return App.self()?.gSon?.fromJson(mInstance?.mSharedPreferences?.getString(key, ""), typeToken.type)
     }
-
 
     fun clear() {
         mSharedPreferences.edit().clear().apply()

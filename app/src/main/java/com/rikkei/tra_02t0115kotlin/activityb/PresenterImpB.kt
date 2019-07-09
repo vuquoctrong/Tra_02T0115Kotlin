@@ -30,8 +30,6 @@ class PresenterImpB : PresenterB {
 //        return SharedPrefs.instance.getArrayObject(Define.KEY_SHAREDPREFS,
 //            object : TypeToken<List<People>>() {}.type as Class<MutableList<People>>
 //        )
-        return  SharedPrefs.instance.getArrayObject(Define.KEY_SHAREDPREFS,
-            mutableListOf<People>()::class.java as Class<MutableList<People>>
-        )
+        return SharedPrefs.instance.getArrayObject(Define.KEY_SHAREDPREFS, object : TypeToken<List<People>>(){})?.toMutableList()
     }
 }
